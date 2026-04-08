@@ -1,16 +1,35 @@
-# React + Vite
+# ScoreLab - Frontend ⚽
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz de usuario para la gestión de torneos de fútbol, desarrollada con **React.js** y **Vite**. Esta aplicación permite a organizadores y delegados gestionar sus competencias en tiempo real.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+##  Requisitos Técnicos
+Antes de comenzar, asegúrate de tener instalado:
+* **Node.js** (Versión 18 o superior).
+* **NPM** (incluido con Node) o **Yarn**.
+* El **Backend** de ScoreLab corriendo en `http://localhost:8080`.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+##  Guía de Instalación Paso a Paso
 
-## Expanding the ESLint configuration
+### 1. Instalar las dependencias
+Este paso descargará todas las librerías necesarias como React, Axios y React Router:
+```sql
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Configurar la conexión con el API
+Abre el archivo src/api/api.js y asegúrate de que la URL apunte a tu servidor de Spring Boot:
+```sql
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api'
+});
+```
+
+### 3. Ejecutar la aplicación
+Para iniciar el servidor de desarrollo, ejecuta:
+```sql
+npm run dev
+```
