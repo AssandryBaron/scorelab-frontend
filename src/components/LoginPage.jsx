@@ -9,43 +9,77 @@ const LoginPage = () => {
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  /*const handleLogin = async (e) => {
     e.preventDefault(); 
     setError(""); 
 
     try {
       const response = await api.post("/auth/login", { correo, contrasena });
 
-      // Imprimimos para estar 100% seguros
-      console.log("Datos recibidos:", response.data);
+      // LOG PARA DEBUG: Aquí verás el objeto ApiResponse { exito, mensaje, datos }
+      console.log("Respuesta completa del servidor:", response.data);
 
-      // 1. En tu Java, el token viene en la propiedad 'datos'
-      const token = response.data.datos; 
-      
-      // 2. Si el rol no viene en la respuesta, lo ideal sería que tu Java lo incluya.
-      // Por ahora, para que no falle, lo buscaremos en 'rol' o pondremos uno por defecto
-      const rol = response.data.rol || "ORGANIZADOR"; 
+      // 1. Extraemos el objeto AuthResponse que está dentro de 'datos'
+      const authData = response.data.datos; 
 
-      if (token) {
-        // Guardamos en el navegador
-        localStorage.setItem("token", token);
-        localStorage.setItem("rol", rol);
+      if (authData && authData.token) {
+        // 2. Guardamos la información real que viene del Backend
+        localStorage.setItem("token", authData.token);
+        localStorage.setItem("rol", authData.rol); // Viene DELEGADO u ORGANIZADOR
+        localStorage.setItem("nombre", authData.nombre);
 
-        alert("¡Inicio de sesión exitoso! Bienvenido a ScoreLab");
-
-        // 3. Redirección
-        if (rol === "ORGANIZADOR") {
+        // 3. Redirección basada en el ROL REAL
+        if (authData.rol === "ORGANIZADOR") {
           navigate("/dashboard-organizador");
-        } else {
+        } else if (authData.rol === "DELEGADO") {
           navigate("/dashboard-delegado");
+        } else {
+          // Por si acaso tienes otros roles en el futuro
+          navigate("/");
         }
       } else {
-        setError("El servidor no devolvió el token en la propiedad 'datos'");
+        setError("Error en el formato de respuesta del servidor.");
       }
       
     } catch (err) {
       console.error("Error en el login:", err);
-      setError("Credenciales incorrectas o problema de conexión.");
+      // Si el backend envía un mensaje de error en ApiResponse, lo mostramos
+      const mensajeError = err.response?.data?.mensaje || "Credenciales incorrectas o problema de conexión.";
+      setError(mensajeError);
+    }
+  };*/
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); 
+    setError(""); 
+
+    try {
+      const response = await api.post("/auth/login", { correo, contrasena });
+      
+      // 🕵️ EXTRAEMOS LOS DATOS
+      const authData = response.data.datos; 
+      
+      // 🚨 DEBUG: Esto te dirá exactamente qué está leyendo React
+      console.log("¿Qué rol recibí del servidor?", authData.rol);
+
+      if (authData && authData.token) {
+        localStorage.setItem("token", authData.token);
+        localStorage.setItem("rol", authData.rol);
+        
+        // PAUSA DE SEGURIDAD: Solo para ver qué dice el mensaje
+        alert("Rol detectado: " + authData.rol);
+
+        if (authData.rol === "DELEGADO") {
+            console.log("Redirigiendo a DELEGADO...");
+            navigate("/dashboard-delegado");
+        } else {
+            console.log("Redirigiendo a ORGANIZADOR...");
+            navigate("/dashboard-organizador");
+        }
+      }
+    } catch (err) {
+      console.error("Error completo:", err);
+      setError("Fallo en el login");
     }
   };
 
