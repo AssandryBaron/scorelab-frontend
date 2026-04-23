@@ -13,7 +13,7 @@ interface HomeContextType {
   createHome: (name: string, address: string, userId: string) => void;
 }
 
-const HomeContext = createContext<HomeContextType | undefined>(undefined);
+export const HomeContext = createContext<HomeContextType | undefined>(undefined);
 
 // Mock data inicial
 const MOCK_HOME: Home = {
@@ -24,7 +24,7 @@ const MOCK_HOME: Home = {
   createdAt: '2026-03-01',
 };
 
-export function HomeProvider({ children }: { children: ReactNode }) {
+export function HomeProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [currentHome, setCurrentHome] = useState<Home | null>(MOCK_HOME);
 
   const createHome = (name: string, address: string, userId: string) => {
